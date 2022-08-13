@@ -57,11 +57,17 @@ def update_index(update, context, elastic):
 
 def main():
     """Start the bot."""
-    print(f"Connecting to elasticsearch... with creds user is {ELASTIC_USER} and pass is {ELASTIC_PASSWORD} and {ELASTICSEARCH_HOST}")
+    print(
+        f"Connecting to elasticsearch... with creds user is {ELASTIC_USER} and pass is {ELASTIC_PASSWORD} and {ELASTICSEARCH_HOST}")
     elastic = Elasticsearch(
         hosts=ELASTICSEARCH_HOST,
         basic_auth=(ELASTIC_USER, ELASTIC_PASSWORD)
     )
+
+    if not elastic.ping():
+        raise ValueError(
+            f"Connection to elasticsearch in {ELASTICSEARCH_HOST} had failed")
+
     print("Connected to elasticsearh")
     updater = Updater(
         TELEGRAM_API_TOKEN, use_context=True)
